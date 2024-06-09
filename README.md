@@ -1,6 +1,4 @@
-# my-ssg-project
-
-
+# simple-jsx-template-engin
 
 To install dev dependencies:
 
@@ -19,6 +17,7 @@ To Build for Production
 ```bash
 bun run build
 ```
+
 To linting
 
 ```bash
@@ -44,6 +43,3 @@ src
 │ └── index.tsx
 └── types.d.ts
 ```
-
-
-
