@@ -1,0 +1,100 @@
+* {
+  box-sizing: border-box;
+}
+
+:where([popover]) {
+  margin: auto;
+}
+
+body {
+  display: grid;
+  min-height: 100vh;
+  padding: var(--size-6);
+  place-items: center;
+}
+
+main {
+  display: inline-grid;
+  gap: 1rem;
+}
+
+p {
+  text-align: left;
+}
+
+p:last-of-type {
+  font-weight: bold;
+}
+
+button {
+  padding: var(--size-2) var(--size-4);
+  border-radius: var(--size-2);
+  background: var(--indigo-6);
+  color: var(--gray-0);
+  justify-self: left;
+}
+
+button:hover {
+  background: var(--indigo-7);
+}
+
+button:active {
+  background: var(--indigo-10);
+}
+
+[popover] {
+  overflow: visible;
+  padding: var(--size-6);
+  background: var(--gray-0);
+  color: var(--gray-10);
+  font-size: 2rem;
+  font-weight: bold;
+}
+
+.wave {
+  display: inline-block;
+  animation: wave 0.25s 0.25s 2;
+  rotate: 0deg;
+  transform-origin: 75% 75%;
+}
+
+@keyframes wave {
+  50% {
+    rotate: 50deg;
+  }
+}
+
+[popover]::after {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  aspect-ratio: 1;
+  background: var(--gray-0);
+  content: "";
+  inline-size: 2rem;
+  rotate: 45deg;
+  translate: -50% 50%;
+}
+
+[popover]::backdrop {
+  animation: fade-in 0.25s;
+  backdrop-filter: blur(4px);
+  background: hsl(0deg 0% 0% / 25%);
+}
+
+[popover]:popover-open {
+  animation: pop 0.25s var(--ease-elastic-5);
+}
+
+@keyframes pop {
+  0% {
+    scale: 0;
+    translate: 0 100%;
+  }
+}
+
+@keyframes fade-in {
+  0% {
+    opacity: 0;
+  }
+}

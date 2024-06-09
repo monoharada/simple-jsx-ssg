@@ -1,0 +1,14 @@
+@import "../_import.css" layer(second);
+
+@layer second, first;
+
+@layer second {
+  h1 {
+    color: blue;
+    font-size: 3rem;
+  }
+
+  .size-xl {
+    font-size: 3rem;
+  }
+}

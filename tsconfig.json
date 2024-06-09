@@ -1,0 +1,22 @@
+{
+  "compilerOptions": {
+    "moduleResolution": "node",
+    "module": "esnext",
+      "baseUrl": ".",
+      "paths": {
+          "compiler/*": ["./tools/compiler/*"],
+          "react": ["node_modules/react"]
+      },
+      "jsx": "react-jsx",
+      "jsxImportSource": "compiler",
+      "lib": ["ESNext", "DOM"],
+      "allowJs": true,
+      "resolveJsonModule": true,
+      "esModuleInterop": true,
+      "allowSyntheticDefaultImports": true,
+      "skipLibCheck": true,
+      "isolatedModules": true,
+      "target": "ESNext",
+      "types": ["bun-types"]
+  }
+}

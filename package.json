@@ -1,0 +1,32 @@
+{
+  "name": "my-ssg-project",
+  "module": "index.ts",
+  "type": "module",
+  "scripts": {
+    "dev": "sh tools/dev/dev.sh",
+    "build": "sh tools/build/prod.sh",
+    "lint": "bun run tools/lint/linting.ts"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "1.8.0",
+    "@markuplint/jsx-parser": "^4.7.3",
+    "@markuplint/react-spec": "^4.5.3",
+    "@types/bun": "latest",
+    "chokidar": "^3.6.0",
+    "js-beautify": "^1.15.1",
+    "markuplint": "^4.9.0",
+    "postcss": "^8.4.38",
+    "postcss-cli": "^11.0.0",
+    "postcss-import": "^16.1.0",
+    "sharp": "^0.33.4",
+    "stylelint": "^16.6.1",
+    "stylelint-config-idiomatic-order": "^10.0.0",
+    "stylelint-config-standard": "^36.0.0"
+  },
+  "peerDependencies": {
+    "typescript": "^5.0.0"
+  },
+  "dependencies": {
+    "lefthook": "^1.6.15"
+  }
+}
