@@ -1,4 +1,4 @@
-# simple-jsx-template-engin
+# simple-jsx-template-engine
 
 jsxをシンプルにテンプレートエンジンとして使用する。TSで静的安全に開発する。
 
