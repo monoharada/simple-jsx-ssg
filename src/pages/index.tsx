@@ -25,6 +25,7 @@ export default async function Index() {
           <li key={item}>{item}</li>
         ))}
       </ul>
+      <simple-greeting>aaa</simple-greeting>
       <div>
         <p>
           テスト
