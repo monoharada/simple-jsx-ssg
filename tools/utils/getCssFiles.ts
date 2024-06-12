@@ -2,7 +2,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 
 const getCssFiles = (): string[] => {
-  const stylesDir = path.resolve(__dirname, '../assets/css/common');
+  const stylesDir = path.resolve(__dirname, '../../src/assets/css/common');
   let cssFiles: string[] = [];
 
   try {
