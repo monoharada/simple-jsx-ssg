@@ -1,6 +1,6 @@
 const siteSetting = {
   style: {
-    layer: 'first,second',
+    layer: 'reset,tokens,base,layout,components,contents,page,hot-fixe',
   },
 };
 
