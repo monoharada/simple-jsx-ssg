@@ -1,10 +1,12 @@
 import { type MetaData, metaData } from 'src/data/metaData';
+import siteSetting from 'src/site-setting';
+import getCssFiles from 'tools/utils/getCssFiles';
 import { getResultPath } from 'tools/utils/getResultPath';
-import getCssFiles from './Styles';
-
 const styleSheets = getCssFiles();
 
 type p = PropsWithChildren<{ customMetaData?: Partial<MetaData>; page: string }>;
+
+const styleLayer = `@layer ${siteSetting.style.layer};`;
 
 const Layout = ({ children, customMetaData = {}, page = '' }: p) => {
   const resultPath = getResultPath(page);
@@ -21,6 +23,7 @@ const Layout = ({ children, customMetaData = {}, page = '' }: p) => {
         <meta charSet='UTF-8' />
         <title>{title}</title>
         <meta name='description' content={description} />
+        <style>{styleLayer}</style>
         {styleSheets.map((style) => (
           <link rel='stylesheet' href={style} key={style} />
         ))}
