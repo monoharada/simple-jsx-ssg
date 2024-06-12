@@ -1,6 +1,3 @@
-// シンプルなwebcomponentの作成
-// greeting.ts
-
 class SimpleGreeting extends HTMLElement {
   constructor() {
     super();
@@ -11,7 +8,7 @@ class SimpleGreeting extends HTMLElement {
   }
 }
 
-customElements.define('simple-greeting', Greeting);
+customElements.define('simple-greeting', SimpleGreeting);
 
 // 使い方:
 // <simple-greeting>ここに表示したいテキストを入れる</simple-greeting>
