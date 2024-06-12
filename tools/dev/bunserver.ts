@@ -1,5 +1,6 @@
-import { extname } from 'path';
+import { extname, join } from 'path';
 import chokidar from 'chokidar';
+import { readdir } from 'fs/promises';
 import { WebSocketServer } from 'ws';
 
 const wss = new WebSocketServer({ port: 8080 });
@@ -18,10 +19,17 @@ chokidar.watch('dist/www').on('all', (event, path) => {
 });
 
 const server = Bun.serve({
-  port: 3000, 
+  port: 3000,
   async fetch(req) {
     const url = new URL(req.url);
     let filePath = `dist/www${url.pathname}`;
+
+    if (url.pathname === '/page-list') {
+      const htmlFiles = await getHtmlFiles('dist/www');
+      const links = htmlFiles.map(file => `<li><a href="${file.replace('dist/www', '')}">${file.replace('dist/www', '')}</a></li>`).join('');
+      const content = `<html><body><ul>${links}</ul></body></html>`;
+      return new Response(content, { headers: { 'Content-Type': 'text/html' } });
+    }
 
     if (url.pathname.endsWith('/')) {
       filePath = `dist/www${url.pathname}index.html`;
@@ -74,5 +82,14 @@ const server = Bun.serve({
     }
   },
 });
+
+async function getHtmlFiles(dir) {
+  const dirents = await readdir(dir, { withFileTypes: true });
+  const files = await Promise.all(dirents.map((dirent) => {
+    const res = join(dir, dirent.name);
+    return dirent.isDirectory() ? getHtmlFiles(res) : res;
+  }));
+  return Array.prototype.concat(...files).filter(file => file.endsWith('.html'));
+}
 
 console.log(`Listening on http://localhost:${server.port}`);
