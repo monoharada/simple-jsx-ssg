@@ -1,6 +1,6 @@
 import { watch } from "node:fs";
 import path from "node:path";
-import { compileAll, compileAndCopyTS, compileHTML, copyAssets, copyAssetsAll } from "../build/build";
+import { compileAll, compileAndCopyTS, compileHTML } from "../build/build";
 import { generateImageMetadata } from "../build/get-image-data";
 import { main as compileCSS } from '../compiler/cssCompile';
 

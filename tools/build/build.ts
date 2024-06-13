@@ -46,7 +46,7 @@ const compileAndCopyTS = async () => {
     }
 }
 
-// CSSファイルをコピーする関数
+// public配下のCSSファイル以外をコピーする関数
 const copyAssetsAll = async () => {
   const assetFiles = await getFilesRecursively("./src/assets")
   for (const file of assetFiles) {
