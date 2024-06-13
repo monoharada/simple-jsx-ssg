@@ -9,7 +9,7 @@ const listItems = ['apple!!!', 'banana', 'cherry'];
 
 const customMetaData: Partial<MetaData> = {
   index: {
-    cssFiles: ['/assets/css/custom.css'],
+    cssFiles: ['/assets/css/pages/hoge.css'],
     jsFiles: ['/assets/scripts/custom.js'],
   },
 };
