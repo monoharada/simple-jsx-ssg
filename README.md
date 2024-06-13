@@ -77,7 +77,7 @@ src/site-setting.tsにて設定する
 - landmarks:headerやfooterなどサイト共通パーツ
 - components:heading,text,link-button,card,badge,accordionなど
 - contents:コンテンツ内でのコンポーネント間の余白調整
-- page:ページ固有で必要なスタイル
+- page:ページ固有で必要なスタイル。このファイルだけはcommonにおかず各pages/{page}.tsxから読み込む
 - operational:運用時に修正が必要になった場合（いずれよりも優先される）
 
 ### importについて
@@ -89,12 +89,14 @@ src/site-setting.tsにて設定する
 *できるだけ少なく*
 
 そのためたとえばcard uiのスタイリングはcard.css内で行うことが望ましい。ただし、デプロイ時に全てのcssを並列に読み込むことはキャッシュ戦略上もあまり有用ではないため、cssファイルの目的に沿ってcascade layersのcssファイルに集約していく。
+importされるcssファイルは`src/assets/css/_import/`配下に置く。
+
 card.cssの場合は
 
 ```css
 /* src/assets/css/commom/components.css */
 
-@import url(../_card.css);
+@import url(../_import/card.css);
 ```
 
 と読み込むことでpostcssによりdist/www/css/common/components.cssないに静的に_card.cssの中身が書き込まれた状態で出力される。
