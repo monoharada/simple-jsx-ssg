@@ -15,11 +15,11 @@ const customMetaData: Partial<MetaData> = {
 };
 
 export default async function Index() {
-  const valueViaChildren = 'Value via children';
+  const valueViaChildren = 'Value via children!!';
 
   return (
     <Layout customMetaData={customMetaData} page={__filename}>
-      <h1 id='h1'>My value!!!!</h1>
+      <h1 id='title'>My value!!!!</h1>
       <ul>
         {listItems.map((item) => (
           <li key={item}>{item}</li>
