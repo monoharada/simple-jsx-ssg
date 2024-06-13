@@ -17,7 +17,7 @@ function getCssFiles(dir) {
 
     if (stat.isDirectory()) {
       cssFiles = cssFiles.concat(getCssFiles(fullPath));
-    } else if (path.extname(file) === '.css' && !path.basename(file).startsWith('_')) {
+    } else if (path.extname(file) === '.css' && !fullPath.includes('_import')) {
       cssFiles.push(fullPath);
     }
   }
