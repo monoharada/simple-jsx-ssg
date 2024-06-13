@@ -16,6 +16,9 @@ export function getResultPath(currentFilePath: string): string {
 
   // 'pages' の後の部分だけを抽出
   const pageIndex = pathParts.indexOf('pages');
+  if (pageIndex === -1) {
+    return '';
+  }
   const relevantParts = pathParts.slice(pageIndex + 1);
 
   // 抽出した部分にファイル名を追加
