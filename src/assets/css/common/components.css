@@ -1,0 +1,8 @@
+/* import が主 */
+
+/* layer test */
+@layer components {
+  h1#title {
+    color: blue;
+  }
+}

@@ -1,0 +1,5 @@
+@layer tokens {
+  :root {
+    --stystem-space-default: 2rem;
+  }
+}

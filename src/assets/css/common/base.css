@@ -1,1 +1,10 @@
-@layer first, second;
+@layer base {
+  *:where(:focus, :focus-visible) {
+    outline: 2px auto var(--system-outline-color, currentcolor);
+    outline-offset: 0.25rem;
+  }
+
+  h1 {
+    color: red;
+  }
+}

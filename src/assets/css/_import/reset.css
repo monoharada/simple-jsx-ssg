@@ -1,0 +1,108 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}
+
+:where([hidden]:not([hidden="until-found"])) {
+  display: none;
+}
+
+:where(html) {
+  tab-size: 2;
+  text-size-adjust: none; /* color-scheme:dark light; */
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  :where(html:focus-within) {
+    scroll-behavior: smooth;
+  }
+}
+
+:where(body) {
+  font-family: system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  line-height: 1.5;
+}
+
+:where(button) {
+  all: unset;
+}
+
+:where(input, button, textarea, select) {
+  color: inherit;
+  font: inherit;
+}
+
+:where(textarea) {
+  resize: block;
+}
+
+:where(button, label, select, summary, [role="button"], [role="option"]) {
+  cursor: pointer;
+}
+
+:where(:disabled) {
+  cursor: not-allowed;
+}
+
+:where(label:has(> input:disabled), label:has(+ input:disabled)) {
+  cursor: not-allowed;
+}
+
+:where(a) {
+  color: inherit;
+  text-underline-offset: 0.2ex;
+}
+
+:where(ul, ol) {
+  list-style: none;
+}
+
+:where(img, svg, video, canvas, audio, iframe, embed, object) {
+  display: block;
+}
+
+:where(img, picture, svg, video) {
+  block-size: auto;
+  max-inline-size: 100%;
+}
+
+:where(p, h1, h2, h3, h4, h5, h6) {
+  overflow-wrap: break-word;
+}
+
+:where(h1, h2, h3) {
+  line-height: calc(1em + 0.5rem);
+  text-wrap: balance;
+}
+
+:where(hr) {
+  overflow: visible;
+  border: none;
+  block-size: 0;
+  border-block-start: 1px solid;
+  color: inherit;
+}
+
+:where(:focus-visible) {
+  box-shadow: 0 0 0 5px canvas;
+  outline: 3px solid canvastext;
+  outline-offset: 1px;
+}
+
+:where(:focus-visible, :target) {
+  scroll-margin-block: 8vh;
+}
+
+:where(.visually-hidden:not(:focus-within, :active)) {
+  position: absolute !important;
+  overflow: hidden !important;
+  width: 1px !important;
+  height: 1px !important;
+  border: 0 !important;
+  clip-path: inset(50%) !important;
+  white-space: nowrap !important;
+}
