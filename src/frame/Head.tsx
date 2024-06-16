@@ -35,6 +35,7 @@ const Head = (props: P) => {
       <link rel='apple-touch-icon' href='icon.png' />
       {/* <link rel="manifest" href="site.webmanifest" /> */}
       <meta name='theme-color' content='#fafafa' />
+      <script src='/assets/js/entry.js' defer></script>
       {jsFiles.map((js) => (
         <script src={js} key={js} defer />
       ))}

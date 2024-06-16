@@ -26,6 +26,21 @@ export default async function Index() {
         ))}
       </ul>
       <simple-greeting>aaa</simple-greeting>
+      <section>
+        <h2>Foot note</h2>
+        <p>
+          some text<sup data-footnote='ref_2'>2</sup>another text
+          <sup data-footnote='ref_1'>1</sup>.... get back text<sup data-footnote='ref_2'>2</sup>
+        </p>
+        <ol data-footnote='list'>
+          <li>
+            footnote description1
+            <br />
+            aaa aaa aa
+          </li>
+          <li>footnote description2</li>
+        </ol>
+      </section>
       <div>
         <p>
           テスト
