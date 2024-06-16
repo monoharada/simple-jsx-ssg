@@ -1,0 +1,81 @@
+@layer component {
+  :root {
+    --footer-note-annotation: "※";
+    --footer-note-list-gap-size: 1em;
+  }
+
+  ol[data-footnote="list"],
+  footer [id^="footnote-label"] + ol {
+    padding-left: var(--footer-note-list-gap-size);
+    counter-reset: footnotes;
+    list-style: "";
+
+    > li {
+      padding-left: var(--footer-note-list-gap-size);
+      text-indent: calc(var(--footer-note-list-gap-size) * -1);
+    }
+
+    > li::before {
+      display: inline-block;
+      min-width: var(--footer-note-list-gap-size);
+      content: var(--footer-note-annotation) counter(footnotes);
+      counter-increment: footnotes;
+    }
+  }
+
+  /**
+   * Initialiazing a `footnotes` counter on the wrapper
+   */
+  :where(article, section):has( a[aria-describedby^="footnote"]) {
+    counter-reset: footnotes;
+  }
+
+  /**
+   * Inline footnotes references
+   * 1. Increment the counter at each new reference
+   * 2. Reset link styles to make it appear like regular text
+   */
+  [aria-describedby^="footnote"] {
+    /* 2 */
+    color: inherit;
+    counter-increment: footnotes;
+
+    /* 2 */
+    cursor: default;
+
+    /* 2 */
+    outline: none;
+
+    /* 1 */
+    text-decoration: none;
+
+    /* 2 */
+  }
+
+  a[aria-describedby^="footnote"] > sup {
+    margin-left: 2px;
+    color: var(--system-color-link, #007bff);
+    cursor: pointer;
+    font-size: 0.7em;
+    padding-inline-end: 0.3em;
+    text-decoration: underline;
+
+    &::before {
+      content: var(--footer-note-annotation);
+    }
+  }
+
+  [aria-describedby^="footnote"]:focus > sup {
+    outline: 1px dotted;
+    outline-offset: 4px;
+  }
+
+  [aria-describedby^="footnote"]:hover > sup {
+    text-decoration: none;
+  }
+
+  footer [id^="footnotes"]:target,
+  ol[data-footnote="list"] [id^="footnote"]:target {
+    background: yellow;
+  }
+}
