@@ -16,7 +16,7 @@
    - `initializeFootnotes`関数は、ドキュメント内のすべてのセクションと記事を検索し、フットノートを初期化します。
 
 3. **クリックイベントの追加**:
-   - `addClickEventToFootnotes`関数は、フットノート参照リンクにクリックイベントを追加し、フットノート項目に戻るリンクを生成します。
+   - `addClickEventToFootnotes`関数は、フットノート参照リlaンクにクリックイベントを追加し、フットノート項目に戻るリンクを生成します。
 
 ### 使い方
 
@@ -36,4 +36,3 @@ prefix(※)やその他のスタイルの調整は`src/assets/css/_import/foot-n
   </footer>
 </section>
 ```
-    
