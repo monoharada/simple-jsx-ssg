@@ -1,6 +1,6 @@
-import Image from 'src/component/Image';
-import type { MetaData } from 'src/data/metaData';
-import Layout from 'src/layout/layout';
+import Image from 'src/components/Image';
+import type { MetaData } from 'src/data/page_metadata';
+import Frame from 'src/frame/Frame';
 
 const valueOutsideComponent = 'Value outside';
 const asyncValueOutsideComponentP = Promise.resolve('Async value outside');
@@ -18,7 +18,7 @@ export default async function Index() {
   const valueViaChildren = 'Value via children!!';
 
   return (
-    <Layout customMetaData={customMetaData} page={__filename}>
+    <Frame customMetaData={customMetaData} page={__filename}>
       <h1 id='title'>My value!!!!</h1>
       <ul>
         {listItems.map((item) => (
@@ -49,7 +49,7 @@ export default async function Index() {
       <Image src='/assets/image/rafael-garcin-kEI0ZZg97PQ-unsplash' alt='hoge' />
 
       <MyValues valueViaProps='Value via props'>{valueViaChildren}</MyValues>
-    </Layout>
+    </Frame>
   );
 }
 

@@ -1,4 +1,14 @@
 @layer base {
+  :root {
+    background-color: var(--system-background-color, #fff);
+    color: var(--system-text-color, #333);
+
+    @media screen and (prefers-color-scheme: dark) {
+      background-color: var(--system-background-color-dark, #000);
+      color: var(--system-text-color-dark, #fff);
+    }
+  }
+
   *:where(:focus, :focus-visible) {
     outline: 2px auto var(--system-outline-color, currentcolor);
     outline-offset: 0.25rem;

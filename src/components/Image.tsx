@@ -1,4 +1,4 @@
-import imageData from 'src/data/image-metadata.json';
+import imageData from 'src/data/image_metadata.json';
 
 type P = {
   src: string;
