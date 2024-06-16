@@ -8,13 +8,14 @@
     "lint": "bun run tools/lint/linting.ts"
   },
   "devDependencies": {
-    "@biomejs/biome": "1.8.0",
+    "@biomejs/biome": "^1.8.1",
     "@markuplint/jsx-parser": "^4.7.3",
     "@markuplint/react-spec": "^4.5.3",
     "@types/bun": "latest",
     "chokidar": "^3.6.0",
     "js-beautify": "^1.15.1",
     "lefthook": "^1.6.15",
+    "@ls-lint/ls-lint": "^2.2.3",
     "markuplint": "^4.9.0",
     "postcss": "^8.4.38",
     "postcss-import": "^16.1.0",
