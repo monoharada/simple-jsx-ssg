@@ -50,6 +50,12 @@ export function addFootnotes(sectionElement) {
   for (const item of footnoteItems) {
     const index = Array.from(footnoteItems).indexOf(item);
     item.id = `footnote-item-${hash}-${index + 1}`;
+    // <span class="annotation" aria-hidden="true"></span> を最初に挿入
+    const annotationSpan = createAndAppend('span', item, {
+      class: 'footnote-annotation',
+      'aria-hidden': 'true',
+    });
+    item.insertBefore(annotationSpan, item.firstChild);
   }
 }
 

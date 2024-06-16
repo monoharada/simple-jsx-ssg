@@ -8,14 +8,18 @@
   footer [id^="footnote-label"] + ol {
     padding-left: var(--footer-note-list-gap-size);
     counter-reset: footnotes;
-    list-style: "";
+    list-style-type: decimal;
 
     > li {
       padding-left: var(--footer-note-list-gap-size);
       text-indent: calc(var(--footer-note-list-gap-size) * -1);
     }
 
-    > li::before {
+    > li::marker {
+      content: "＊" counter();
+    }
+
+    > li > .footnote-annotation::before {
       display: inline-block;
       min-width: var(--footer-note-list-gap-size);
       content: var(--footer-note-annotation) counter(footnotes);
