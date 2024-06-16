@@ -72,48 +72,54 @@ const copyAssets = async (file: string) => {
 // JSXファイルをHTMLに変換する関数
 const compileHTML = async (changedFile: string) => {
   try {
-    if (!existsSync("dist")) mkdirSync("dist");
-    if (!existsSync("dist/js")) mkdirSync("dist/js");
-    if (!existsSync("dist/www")) mkdirSync("dist/www");
+      if (!existsSync("dist")) mkdirSync("dist")
+      if (!existsSync("dist/js")) mkdirSync("dist/js")
+      if (!existsSync("dist/www")) mkdirSync("dist/www")
 
-    const jsxFiles = [changedFile].filter((file) => extname(file) === ".tsx");
+      const jsxFiles = [changedFile].filter(file => extname(file) === ".tsx")
 
-    for (const file of jsxFiles) {
-      const outputDir = `dist/js/${relative("./src/pages", dirname(file))}`;
-      console.log(`outputDir!!: ${outputDir}`)
-      if (!existsSync(outputDir)) {
-        ensureDirectoryExistence(outputDir);
-        mkdirSync(outputDir, { recursive: true });
+      for (const file of jsxFiles) {
+          const outputDir = `dist/js/${relative('./src/pages', dirname(file))}`
+          if (!existsSync(outputDir)) {
+              ensureDirectoryExistence(outputDir)
+              mkdirSync(outputDir, { recursive: true })
+          }
+          console.log(`Building: ${file}`)
+          execSync(`bun build ${file} --outdir ${outputDir} --target=bun`)
       }
-      console.log(`Building: ${file}`);
-      execSync(`bun build ${file} --outdir ${outputDir} --target=bun`);
-    }
 
-    const jsFiles = [changedFile.replace(/\.tsx$/, ".js")];
+      const jsFiles = [changedFile.replace(/\.tsx$/, '.js')]
 
-    for (const file of jsFiles) {
-      if (!file.endsWith(".js")) continue;
+      for (const file of jsFiles) {
+          if (!file.endsWith(".js")) continue
 
-      const relativePath = relative("./src/pages", file);
-      const nameWithoutExt = relativePath.replace(/\.js$/, "");
-      const outputHtmlPath = `./dist/www/${nameWithoutExt}.html`;
+          const relativePath = relative('./src/pages', file)
+          const nameWithoutExt = relativePath.replace(/\.js$/, '')
+          const outputHtmlPath = `./dist/www/${nameWithoutExt}.html`
 
-      ensureDirectoryExistence(outputHtmlPath);
+          ensureDirectoryExistence(outputHtmlPath)
 
-      console.log(`Converting ${file} to HTML`);
-      const pageFunction = await import(resolve(file)).then((p) => p.default);
-      let htmlContent = await pageFunction();
+          console.log(`Converting ${file} to HTML`)
+          clearRequireCache(resolve(file))
+          const pageFunction = await import(resolve(file)).then(p => p.default)
+          let htmlContent = await pageFunction()
 
-      // <!DOCTYPE html> を追加
-      htmlContent = `<!DOCTYPE html>\n${htmlContent}`;
+          // <!DOCTYPE html> を追加
+          htmlContent = `<!DOCTYPE html>\n${htmlContent}`
 
-      await fsPromises.writeFile(outputHtmlPath, htmlContent, "utf8");
-      console.log(`Generated: ${outputHtmlPath}`);
-    }
+          await fsPromises.writeFile(outputHtmlPath, htmlContent, 'utf8')
+          console.log(`Generated: ${outputHtmlPath}`)
+      }
+
+      // CSSファイルをコピー
+      // if (extname(changedFile) === ".css") {
+      //     await copyAssets(changedFile)
+      // }
+
   } catch (error) {
-    console.error("Error during HTML compilation:", error);
+      console.error("Error during HTML compilation:", error)
   }
-};
+}
 
 // public配下のファイルをそのままdist/www/配下に階層構造を保ってコピーする関数
 const copyPublicFiles = async () => {
