@@ -17,7 +17,13 @@ const Head = (props: P) => {
       <meta charSet='utf-8' />
       <meta name='viewport' content='width=device-width, initial-scale=1' />
       <title>{title}</title>
-      <link rel='stylesheet' href='css/style.css' />
+      <style>{styleLayer}</style>
+      {commonStyleSheets.map((style) => (
+        <link rel='stylesheet' href={style} key={style} media='screen' />
+      ))}
+      {cssFiles.map((css) => (
+        <link rel='stylesheet' href={css} key={css} media='screen' />
+      ))}
       <meta name='description' content={description} />
       <meta property='og:title' content={title} />
       <meta property='og:type' content={ogType} />
@@ -29,13 +35,6 @@ const Head = (props: P) => {
       <link rel='apple-touch-icon' href='icon.png' />
       {/* <link rel="manifest" href="site.webmanifest" /> */}
       <meta name='theme-color' content='#fafafa' />
-      <style>{styleLayer}</style>
-      {commonStyleSheets.map((style) => (
-        <link rel='stylesheet' href={style} key={style} />
-      ))}
-      {cssFiles.map((css) => (
-        <link rel='stylesheet' href={css} key={css} />
-      ))}
       {jsFiles.map((js) => (
         <script src={js} key={js} defer />
       ))}
