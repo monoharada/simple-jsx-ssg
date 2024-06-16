@@ -1,8 +1,8 @@
 import fs from 'node:fs';
 import path from 'node:path';
-import {generateImageMetadata} from 'tools/build/get-image-data.js';
-import {convertImages} from 'tools/build/image-convert.js';
-import { main as compileCSS } from '../compiler/cssCompile';
+import {generateimage_metadata} from 'tools/build/getImageData.js';
+import {convertImages} from 'tools/build/imageConvert.js';
+import { main as compileCSS } from '../compiler/css-compile';
 import {compileAll} from "./build.js";
 
 // dist/wwwディレクトリをクリーンナップ
@@ -15,7 +15,7 @@ const cleanDist = () => {
 };
 
 cleanDist();
-generateImageMetadata();
+generateimage_metadata();
 compileAll();
 compileCSS();
 convertImages();

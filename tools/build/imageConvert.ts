@@ -4,7 +4,7 @@ import sharp from 'sharp';
 
 const inputDir = 'src/assets/image';
 const outputDir = 'dist/www/assets/image';
-const metadataFile = 'src/data/image-metadata.json';
+const metadataFile = 'src/data/image_metadata.json';
 
 export async function convertImages() {
     fs.mkdirSync(outputDir, { recursive: true });

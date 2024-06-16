@@ -1,13 +1,13 @@
 import { watch } from "node:fs";
 import path from "node:path";
 import { compileAll, compileAndCopyTS, compileHTML } from "../build/build";
-import { generateImageMetadata } from "../build/get-image-data";
-import { main as compileCSS } from '../compiler/cssCompile';
+import { generateimage_metadata } from "../build/getImageData";
+import { main as compileCSS } from '../compiler/css-compile';
 
 const watchDirectories = ["./src/", "./src/assets/"];
 
 compileAll();
-generateImageMetadata();
+generateimage_metadata();
 compileCSS();
 
 const watchFiles = () => {
@@ -52,8 +52,8 @@ const watchFiles = () => {
         } else if (filename.endsWith(".png") || filename.endsWith(".jpg") || filename.endsWith(".jpeg")) {
           console.log(`${filename}が変更されました。メタデータを再構築中...`);
           try {
-            console.log('generateImageMetadataを実行中...');
-            await generateImageMetadata();
+            console.log('generateimage_metadataを実行中...');
+            await generateimage_metadata();
             console.log("メタデータの再構築が完了しました！");
           } catch (error) {
             console.error("メタデータの再構築中にエラーが発生しました：", error);

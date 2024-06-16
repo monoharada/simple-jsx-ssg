@@ -23,3 +23,12 @@ elif [[ "$OSTYPE" == "darwin"* ]]; then
 elif [[ "$OSTYPE" == "msys" ]]; then
     start http://localhost:3000/page-list
 fi
+
+# プロセスIDを取得
+WATCHER_PID=$!
+
+# SIGINT (ctrl + c) シグナルをキャッチしてプロセスを終了
+trap "echo 'Stopping watcher.ts...'; pkill -f watcher.ts; exit 0" SIGINT
+
+# プロセスが終了するまで待機
+wait $WATCHER_PID

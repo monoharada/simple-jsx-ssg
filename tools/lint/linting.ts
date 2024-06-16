@@ -24,6 +24,10 @@ function runCommand(command: string, commandName: string): Promise<void> {
 async function main() {
 	const results = await Promise.allSettled([
 		runCommand(
+			"bunx ls-lint -config ./tools/lint/.ls-lint.yml",
+			"ls-lint",
+		),
+		runCommand(
 			"bunx biome check --config-path ./tools/lint/ --write .",
 			"biome",
 		),

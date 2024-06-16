@@ -1,0 +1,26 @@
+ls:
+  src/pages:
+    .dir: kebab-case
+    .tsx: kebab-case | regex:^_[a-z-.]* | regex:^\[\w*\]
+  src/components:
+    .dir: camelCase
+    .tsx: PascalCase
+  src/frame:
+    .dir: camelCase
+    .tsx: PascalCase
+  src/data:
+    .dir: snake_case
+    .json: snake_case
+    .ts: snake_case
+  src/assets:
+    .dir: kebab-case
+    "*.{png,jpg,jpeg,svg,css,ts,js}": kebab-case
+  src/assets/css:
+    .dir: kebab-case | regex:^_import$
+  tools/compiler:
+    .ts: kebab-case
+  tools/build:
+    .test: camelCase
+  tools:
+    .test.ts: camelCase
+    .ts: camelCase
