@@ -5,7 +5,7 @@ const siteSetting = {
     alt: 'Example Site',
   },
   style: {
-    layer: 'reset,tokens,base,layout,components,contents,page,hot-fixe',
+    layer: 'reset,tokens,base,layout,components,contents,page,operational',
   },
 };
 
