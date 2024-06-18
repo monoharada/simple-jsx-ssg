@@ -14,9 +14,10 @@ ls:
     .ts: snake_case
   src/assets:
     .dir: kebab-case
-    "*.{png,jpg,jpeg,svg,css,ts,js}": kebab-case
+    ".{png,jpg,jpeg,svg,css,ts,js}": kebab-case
   src/assets/css:
     .dir: kebab-case | regex:^_import$
+    .css: kebab-case
   tools/compiler:
     .ts: kebab-case
   tools/build:
