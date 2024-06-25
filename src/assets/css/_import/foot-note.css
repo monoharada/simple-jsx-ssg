@@ -30,7 +30,7 @@
   /**
    * Initialiazing a `footnotes` counter on the wrapper
    */
-  :where(article, section):has( a[aria-describedby^="footnote"]) {
+  :where(article, section):has(a[aria-describedby^="footnote"]) {
     counter-reset: footnotes;
   }
 
