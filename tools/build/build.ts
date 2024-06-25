@@ -91,30 +91,33 @@ const compileHTML = async (changedFile: string) => {
       const jsFiles = [changedFile.replace(/\.tsx$/, '.js')]
 
       for (const file of jsFiles) {
-          if (!file.endsWith(".js")) continue
+        if (!file.endsWith(".js")) continue
 
-          const relativePath = relative('./src/pages', file)
-          const nameWithoutExt = relativePath.replace(/\.js$/, '')
-          const outputHtmlPath = `./dist/www/${nameWithoutExt}.html`
+        const relativePath = relative('./src/pages', file)
+        const nameWithoutExt = relativePath.replace(/\.js$/, '')
+        let outputHtmlPath
 
-          ensureDirectoryExistence(outputHtmlPath)
+        if (file.endsWith(".inc.js")) {
+            outputHtmlPath = `./dist/www/${nameWithoutExt}`
+        } else {
+            outputHtmlPath = `./dist/www/${nameWithoutExt}.html`
+        }
 
-          console.log(`Converting ${file} to HTML`)
-          clearRequireCache(resolve(file))
-          const pageFunction = await import(resolve(file)).then(p => p.default)
-          let htmlContent = await pageFunction()
+        ensureDirectoryExistence(outputHtmlPath)
 
+        console.log(`Converting ${file} to HTML`)
+        clearRequireCache(resolve(file))
+        const pageFunction = await import(resolve(file)).then(p => p.default)
+        let htmlContent = await pageFunction()
+
+        if (!file.endsWith(".inc.js") && !file.includes("include")) {
           // <!DOCTYPE html> を追加
           htmlContent = `<!DOCTYPE html>\n${htmlContent}`
-
-          await fsPromises.writeFile(outputHtmlPath, htmlContent, 'utf8')
-          console.log(`Generated: ${outputHtmlPath}`)
       }
 
-      // CSSファイルをコピー
-      // if (extname(changedFile) === ".css") {
-      //     await copyAssets(changedFile)
-      // }
+        await fsPromises.writeFile(outputHtmlPath, htmlContent, 'utf8')
+        console.log(`Generated: ${outputHtmlPath}`)
+    }
 
   } catch (error) {
       console.error("Error during HTML compilation:", error)
@@ -136,7 +139,7 @@ const copyPublicFiles = async () => {
 // 既存のcompileAll関数に追加
 const compileAll = async () => {
   try {
-      if (!existsSync("dist")) mkdirSync("dist")
+    if (!existsSync("dist")) mkdirSync("dist")
       if (!existsSync("dist/js")) mkdirSync("dist/js")
       if (!existsSync("dist/www")) mkdirSync("dist/www")
 
@@ -144,38 +147,8 @@ const compileAll = async () => {
       const jsxFiles = pageFiles.filter(file => extname(file) === ".tsx")
 
       for (const file of jsxFiles) {
-          const outputDir = `dist/js/${relative('./src/pages', dirname(file))}`
-          if (!existsSync(outputDir)) {
-              ensureDirectoryExistence(outputDir)
-              mkdirSync(outputDir, { recursive: true })
-          }
-          console.log(`Building: ${file}`)
-          execSync(`bun build ${file} --outdir ${outputDir} --target=bun`)
+          await compileHTML(file)
       }
-
-      const jsFiles = await getFilesRecursively("./dist/js")
-
-      for (const file of jsFiles) {
-          if (!file.endsWith(".js")) continue
-
-          const relativePath = relative('./dist/js', file)
-          const nameWithoutExt = relativePath.replace(/\.js$/, '')
-          const outputHtmlPath = `./dist/www/${nameWithoutExt}.html`
-
-          ensureDirectoryExistence(outputHtmlPath)
-
-          console.log(`Converting ${file} to HTML`)
-          clearRequireCache(resolve(file))
-          const pageFunction = await import(resolve(file)).then(p => p.default)
-          let htmlContent = await pageFunction()
-
-          // <!DOCTYPE html> を追加
-          htmlContent = `<!DOCTYPE html>\n${htmlContent}`
-
-          await fsPromises.writeFile(outputHtmlPath, htmlContent, 'utf8')
-          console.log(`Generated: ${outputHtmlPath}`)
-      }
-
       // CSSファイルをコピー
       await copyAssetsAll()
 
