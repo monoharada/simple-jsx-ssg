@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "sh tools/dev/dev.sh",
     "build": "sh tools/build/prod.sh",
+    "staging": "sh tools/build/staging.sh",
     "lint": "bun run tools/lint/linting.ts"
   },
   "devDependencies": {
