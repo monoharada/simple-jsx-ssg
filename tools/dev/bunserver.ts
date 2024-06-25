@@ -18,6 +18,17 @@ chokidar.watch('dist/www').on('all', (event, path) => {
   }
 });
 
+async function processSSI(content, basePath) {
+  const ssiRegex = /<!--#include virtual="(.+?)" -->/g;
+  let match;
+  while ((match = ssiRegex.exec(content)) !== null) {
+    const includePath = join(basePath, match[1]);
+    const includeContent = await Bun.file(includePath).text();
+    content = content.replace(match[0], includeContent);
+  }
+  return content;
+}
+
 const server = Bun.serve({
   port: 3000,
   async fetch(req) {
@@ -46,6 +57,7 @@ const server = Bun.serve({
       if (ext === '.html') {
         contentType = 'text/html';
         content = await Bun.file(filePath).text();
+        content = await processSSI(content, 'dist/www');
         content = content.replace(
           '</body>',
           `<script>
