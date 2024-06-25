@@ -1,4 +1,5 @@
 import Break from 'src/components/Break';
+import Comment from 'src/components/Comment';
 import Image from 'src/components/Image';
 import type { MetaData } from 'src/data/page_metadata';
 import Frame from 'src/frame/Frame';
@@ -26,6 +27,8 @@ export default async function Index() {
           <li key={item}>{item}</li>
         ))}
       </ul>
+      <Comment ssi='/include/hoge.inc' />
+      <Comment ssi='/include/hoge.html' />
       <simple-greeting>aaa</simple-greeting>
       <section>
         <h2>Foot note</h2>
