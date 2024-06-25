@@ -1,6 +1,7 @@
 ls:
   src/pages:
     .dir: kebab-case
+    .inc.tsx: kebab-case | regex:^_[a-z-.]* | regex:^\[\w*\]
     .tsx: kebab-case | regex:^_[a-z-.]* | regex:^\[\w*\]
   src/components:
     .dir: camelCase
