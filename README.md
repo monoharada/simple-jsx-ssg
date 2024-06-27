@@ -6,10 +6,14 @@ jsxをシンプルにテンプレートエンジンとして使用する。TSで
 
 - 開発時、プロダクション時にjsxは変更を検知するとすぐさま`dist/www`へ静的htmlで吐き出される。`dist/www`の変更を検知してブラウザがリロードされる。
 - `postcss-import`は使うが基本的にcssはコンパイルせず複数ファイルを読み込む。(HTTP/2を前提としている)
-- 画像はサイズをjson形式で`src/data/image_metadata.json`に出力し`src/component/Image.tsx`で利用する。プロダクション環境ではpng,jpgはavifに変換される
+- 画像はサイズをjson形式で`src/data/image_metadata.json`に出力し`/component/Image.tsx`で利用する。プロダクション環境ではpng,jpgはavifに変換される
 - jsはmoduleで読み込み必要なものが必要な場合にリクエストされる。src/assets/js/内でvanilla.jsを使う（reactはパッケージに入っていない）
 - meta情報は`src/data/page_metadata.ts`に記載していく
 - pages配下の`.tsx`で`customMetaData`と`__filename`を`src/frame/Frame.tsx`に渡すことで追加スクリプトやmeta情報の変更を行える
+- SSIが使えます。
+  - Commentコンポーネントでprops`ssi`を使用してincファイル（htmlでもよい）への納品時の相対パスを記述します。
+  - Cloudflareなどのモダンなプラットフォームを開発時の検証・共有サーバーにしたい場合にはビルドコマンドを`bun staging`に設定します。
+  - ssiを使用できるサーバーへアップする場合は`bun run build`を使用します。
 
 To install dev dependencies:
 
@@ -150,7 +154,7 @@ card.cssの場合は
     @layer components を使って、コンポーネント用のスタイルを定義するレイヤーを指定しています。これにより、他のスタイル（例えばユーティリティスタイルなど）と明確に分けることができます。
 
 3. カードコンポーネントのスタイル設定
-    カスタムプロパティ（CSS変数）の使用:
+    カスタムプロパティ（CSS変数）の使用できる:する場合は`bun run build`を使用します。
 
     --card-row-gap や --card-round といったカスタムプロパティを使用して、カードの行間や角の丸みを指定しています。これらのプロパティは、変更が必要なときに簡単に値を調整できるようにするためのものです。また基本的には:root内で宣言しているサイト共通の変数を使いつつ、コンポーネント独自に規定すべきものについては同値であっても再代入します。
 
