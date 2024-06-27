@@ -16,12 +16,19 @@ const customMetaData: Partial<MetaData> = {
   },
 };
 
+type CatFactsResponse = {
+  fact: string;
+  length: number;
+};
+
+const req: Promise<CatFactsResponse> = (await fetch('https://catfact.ninja/fact')).json();
+
 export default async function Index() {
   const valueViaChildren = 'Value via children!!';
-
+  const catFacts: CatFactsResponse = await req;
   return (
     <Frame customMetaData={customMetaData} page={__filename}>
-      <h1 id='title'>My value!!!!</h1>
+      <h1 id='title'>{catFacts.fact}</h1>
       <ul>
         {listItems.map((item) => (
           <li key={item}>{item}</li>
