@@ -46,7 +46,7 @@ export default async function Index() {
         I'm a Popover! <span className='wave'>👋</span>
       </div>
 
-      <Image src='/assets/image/rafael-garcin-kEI0ZZg97PQ-unsplash' alt='hoge' />
+      <Image src='/assets/image/rafael--kEI0ZZg97PQ-unsplash' alt='hoge' />
 
       <MyValues valueViaProps='Value via props'>{valueViaChildren}</MyValues>
     </Frame>
