@@ -8,7 +8,7 @@ const Layout = ({ children, page }: p) => {
       <main>{children}</main>
       <footer>
         footer
-        {page === 'hoge' && 'hogeeeee'}
+        {page === 'hoge' && 'hoge'}
       </footer>
     </body>
   );
