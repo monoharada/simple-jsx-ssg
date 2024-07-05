@@ -34,7 +34,7 @@ export function addFootnotes(sectionElement) {
     if (!refNumber) {
       throw new Error(`Invalid footnote reference: ${ref.getAttribute('data-footnote')}`);
     }
-    const index = parseInt(refNumber[1], 10) - 1;
+    const index = Number.parseInt(refNumber[1], 10) - 1;
     const footnoteId = `footnote-ref-${hash}-${index + 1}-${refCounter++}`; // 修正: 一意の識別子を追加
     refIdMap.set(index, footnoteId); // 追加: マッピングに追加
     const link = createAndAppend('a', ref.parentNode, {
@@ -63,14 +63,15 @@ export function initializeFootnotes() {
   const sections = Array.from(
     document.querySelectorAll('section:has([data-footnote]), article:has([data-footnote])'),
   );
-  sections.forEach((sectionElement) => {
+  for (const sectionElement of sections) {
     addFootnotes(sectionElement);
-  });
+  }
   addClickEventToFootnotes();
 }
 
 function addClickEventToFootnotes() {
-  document.querySelectorAll("a[href^='#footnote-item']").forEach((link) => {
+  const links = document.querySelectorAll("a[href^='#footnote-item']");
+  for (const link of Array.from(links)) {
     link.addEventListener('click', (event) => {
       const linkId = link.id;
       const targetId = link.getAttribute('href').slice(1);
@@ -89,7 +90,7 @@ function addClickEventToFootnotes() {
         backLink.href = `#${linkId}`;
       }
     });
-  });
+  }
 }
 
 initializeFootnotes();
