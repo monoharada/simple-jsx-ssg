@@ -1,6 +1,6 @@
-import { extname, join } from 'path';
+import { readdir } from 'node:fs/promises';
+import { extname, join } from 'node:path';
 import chokidar from 'chokidar';
-import { readdir } from 'fs/promises';
 import { WebSocketServer } from 'ws';
 
 const wss = new WebSocketServer({ port: 8080 });
@@ -18,15 +18,18 @@ chokidar.watch('dist/www').on('all', (event, path) => {
   }
 });
 
-async function processSSI(content, basePath) {
+async function processSSI(content: string, basePath: string) {
   const ssiRegex = /<!--#include virtual="(.+?)" -->/g;
-  let match;
-  while ((match = ssiRegex.exec(content)) !== null) {
+  let match: RegExpExecArray | null;
+  let localContent = content
+  while (true) {
+    match = ssiRegex.exec(content);
+    if (match === null) break;
     const includePath = join(basePath, match[1]);
     const includeContent = await Bun.file(includePath).text();
-    content = content.replace(match[0], includeContent);
+    localContent = content.replace(match[0], includeContent);
   }
-  return content;
+  return localContent;
 }
 
 const server = Bun.serve({
@@ -51,7 +54,7 @@ const server = Bun.serve({
     const fileExists = await Bun.file(filePath).exists();
     if (fileExists) {
       const ext = extname(filePath);
-      let content;
+      let content: BodyInit;
       let contentType = 'text/plain';
 
       if (ext === '.html') {
@@ -89,9 +92,8 @@ const server = Bun.serve({
       }
 
       return new Response(content, { headers: { 'Content-Type': contentType } });
-    } else {
-      return new Response("Not Found", { status: 404 });
     }
+      return new Response("Not Found", { status: 404 });
   },
 });
 

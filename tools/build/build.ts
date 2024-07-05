@@ -1,4 +1,5 @@
 import { execSync } from "node:child_process"
+import type { PathLike } from "node:fs"
 import { existsSync, promises as fsPromises, mkdirSync } from "node:fs"
 import { dirname, extname, relative, resolve } from "node:path"
 
@@ -95,7 +96,7 @@ const compileHTML = async (changedFile: string) => {
 
         const relativePath = relative('./src/pages', file)
         const nameWithoutExt = relativePath.replace(/\.js$/, '')
-        let outputHtmlPath
+        let outputHtmlPath: PathLike | fsPromises.FileHandle
 
         if (file.endsWith(".inc.js")) {
             outputHtmlPath = `./dist/www/${nameWithoutExt}`
