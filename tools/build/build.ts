@@ -26,11 +26,15 @@ const getFilesRecursively = async (dir: string): Promise<string[]> => {
 
 // モジュールキャッシュをクリアする関数
 const clearRequireCache = (filePath: string) => {
-    const resolvedPath = require.resolve(filePath)
-    if (require.cache[resolvedPath]) {
-        delete require.cache[resolvedPath]
-        console.log(`Cache cleared for: ${filePath}`)
-    }
+  const resolvedPath = require.resolve(filePath)
+  if (require.cache[resolvedPath]) {
+      // 依存関係のキャッシュを再帰的にクリア
+      for (const child of require.cache[resolvedPath].children) {
+          clearRequireCache(child.id)
+      }
+      delete require.cache[resolvedPath]
+      console.log(`Cache cleared for: ${filePath}`)
+  }
 }
 
 // TypeScriptファイルをJavaScriptにコンパイルしてコピーする関数
@@ -103,20 +107,21 @@ const compileHTML = async (changedFile: string) => {
         } else {
             outputHtmlPath = `./dist/www/${nameWithoutExt}.html`
         }
-
+        if (file.includes("src/pages")) {
         ensureDirectoryExistence(outputHtmlPath)
-
+        }
         console.log(`Converting ${file} to HTML`)
         clearRequireCache(resolve(file))
-        const pageFunction = await import(resolve(file)).then(p => p.default)
-        let htmlContent = await pageFunction()
 
-        if (!file.endsWith(".inc.js") && !file.includes("include")) {
+        const pageFunction = await import(resolve(file)).then(p => p.default)
+        let htmlContent: string | undefined
+        if (!file.endsWith(".inc.js") && !file.includes("include") && file.includes("pages")) {
+          htmlContent = await pageFunction()
           // <!DOCTYPE html> を追加
           htmlContent = `<!DOCTYPE html>\n${htmlContent}`
       }
 
-        await fsPromises.writeFile(outputHtmlPath, htmlContent, 'utf8')
+        htmlContent && await fsPromises.writeFile(outputHtmlPath, htmlContent, 'utf8')
         console.log(`Generated: ${outputHtmlPath}`)
     }
 
@@ -144,7 +149,7 @@ const compileAll = async () => {
       if (!existsSync("dist/js")) mkdirSync("dist/js")
       if (!existsSync("dist/www")) mkdirSync("dist/www")
 
-      const pageFiles = await getFilesRecursively("./src/pages")
+      const pageFiles = await getFilesRecursively("./src")
       const jsxFiles = pageFiles.filter(file => extname(file) === ".tsx")
 
       for (const file of jsxFiles) {
