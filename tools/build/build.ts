@@ -108,21 +108,25 @@ const compileHTML = async (changedFile: string) => {
             outputHtmlPath = `./dist/www/${nameWithoutExt}.html`
         }
         if (file.includes("src/pages")) {
-        ensureDirectoryExistence(outputHtmlPath)
+            ensureDirectoryExistence(outputHtmlPath)
         }
         console.log(`Converting ${file} to HTML`)
         clearRequireCache(resolve(file))
 
         const pageFunction = await import(resolve(file)).then(p => p.default)
         let htmlContent: string | undefined
-        if (!file.endsWith(".inc.js") && !file.includes("include") && file.includes("pages")) {
-          htmlContent = await pageFunction()
-          // <!DOCTYPE html> を追加
-          htmlContent = `<!DOCTYPE html>\n${htmlContent}`
-      }
+
+        // htmlContentの生成を修正
+        if (file.includes("pages")) {
+            htmlContent = await pageFunction()
+            if (!file.endsWith(".inc.js") && !file.includes("include")) {
+                // <!DOCTYPE html> を追加
+                htmlContent = `<!DOCTYPE html>\n${htmlContent}`
+            }
+        }
 
         htmlContent && await fsPromises.writeFile(outputHtmlPath, htmlContent, 'utf8')
-        console.log(`Generated: ${outputHtmlPath}`)
+        htmlContent && console.log(`Generated: ${outputHtmlPath}`)
     }
 
   } catch (error) {
