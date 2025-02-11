@@ -19,7 +19,11 @@
         "htdocs",
         "hono",
         "hoge",
-        "fuga"
+        "fuga",
+        "popovertarget",
+        "bunx",
+        "markuplintrc",
+        "markuplint",
     ],
     "ignorePaths": [
         "../src/data/image_metadata.json"

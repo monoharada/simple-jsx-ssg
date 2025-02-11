@@ -4,8 +4,8 @@ ls:
     .inc.tsx: kebab-case | regex:^_[a-z-.]* | regex:^\[\w*\]
     .tsx: kebab-case | regex:^_[a-z-.]* | regex:^\[\w*\]
   src/components:
-    .dir: camelCase
-    .tsx: PascalCase
+    .dir: PascalCase | regex:^components$
+    .tsx: PascalCase | regex:^index$
   src/frame:
     .dir: camelCase
     .tsx: PascalCase
