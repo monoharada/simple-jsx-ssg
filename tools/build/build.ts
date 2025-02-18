@@ -1,176 +1,196 @@
-import { execSync } from "node:child_process"
-import type { PathLike } from "node:fs"
-import { existsSync, promises as fsPromises, mkdirSync } from "node:fs"
-import { dirname, extname, relative, resolve } from "node:path"
+import { exec } from "node:child_process";
+import { promises as fsPromises } from "node:fs";
+import { dirname, extname, relative, resolve } from "node:path";
+import util from "node:util";
 
+const execAsync = util.promisify(exec);
 
-// ディレクトリが存在しない場合に作成する関数
-const ensureDirectoryExistence = (filePath: string) => {
-    const dirName = dirname(filePath)
-    if (existsSync(dirName)) return true
-    ensureDirectoryExistence(dirName)
-    mkdirSync(dirName)
-}
+/**
+ * 指定パスの親ディレクトリが存在しなければ作成する（非同期版）
+ */
+const ensureDirectoryExistence = async (filePath: string): Promise<void> => {
+  await fsPromises.mkdir(dirname(filePath), { recursive: true });
+};
 
-// ディレクトリを再帰的に探索してすべてのファイルパスを取得する関数
+/**
+ * 指定したコマンドを非同期で実行する
+ */
+const runCommand = async (command: string): Promise<void> => {
+  try {
+    const { stdout, stderr } = await execAsync(command);
+    if (stdout) console.log(stdout);
+    if (stderr) console.error(stderr);
+  } catch (error) {
+    console.error(`Command failed: ${command}`, error);
+    throw error;
+  }
+};
+
+/**
+ * 指定ディレクトリ以下の全ファイルパスを再帰的に取得する
+ */
 const getFilesRecursively = async (dir: string): Promise<string[]> => {
-    const dirents = await fsPromises.readdir(dir, { withFileTypes: true })
-    const files = await Promise.all(
-        dirents.map(async (dirent) => {
-            const res = resolve(dir, dirent.name)
-            return dirent.isDirectory() ? getFilesRecursively(res) : res
-        })
-    )
-    return Array.prototype.concat(...files)
-}
+  const entries = await fsPromises.readdir(dir, { withFileTypes: true });
+  const files = await Promise.all(
+    entries.map(async (entry) => {
+      const fullPath = resolve(dir, entry.name);
+      return entry.isDirectory() ? getFilesRecursively(fullPath) : fullPath;
+    })
+  );
+  return files.flat();
+};
 
-// モジュールキャッシュをクリアする関数
-const clearRequireCache = (filePath: string) => {
-  const resolvedPath = require.resolve(filePath)
+/**
+ * require キャッシュを依存関係も含めてクリアする
+ */
+const clearRequireCache = (filePath: string): void => {
+  const resolvedPath = require.resolve(filePath);
   if (require.cache[resolvedPath]) {
-      // 依存関係のキャッシュを再帰的にクリア
-      for (const child of require.cache[resolvedPath].children) {
-          clearRequireCache(child.id)
-      }
-      delete require.cache[resolvedPath]
-      console.log(`Cache cleared for: ${filePath}`)
-  }
-}
-
-// TypeScriptファイルをJavaScriptにコンパイルしてコピーする関数
-const compileAndCopyTS = async () => {
-    const tsFiles = await getFilesRecursively("./src/assets/js")
-    for (const file of tsFiles) {
-        if (extname(file) === ".ts") {
-            const relativePath = relative("./src/assets/js", file)
-            const outputPath = `./dist/www/assets/js/${relativePath.replace(/\.ts$/, '.js')}`
-            ensureDirectoryExistence(outputPath)
-            execSync(`bun build ${file} --outdir ${dirname(outputPath)}`)
-            console.log(`Compiled and copied: ${file} to ${outputPath}`)
-        }
+    for (const child of require.cache[resolvedPath].children) {
+      clearRequireCache(child.id);
     }
-}
-
-// public配下のCSSファイル以外をコピーする関数
-const copyAssetsAll = async () => {
-  const assetFiles = await getFilesRecursively("./src/assets")
-  for (const file of assetFiles) {
-      if (extname(file) === ".css") continue // CSSファイルをスキップ
-      const relativePath = relative("./src/assets", file)
-      const outputPath = `./dist/www/assets/${relativePath}`
-      ensureDirectoryExistence(outputPath)
-      await fsPromises.copyFile(file, outputPath)
-      console.log(`Copied: ${file} to ${outputPath}`)
+    delete require.cache[resolvedPath];
+    console.log(`Cache cleared for: ${filePath}`);
   }
-}
+};
 
-// 特定のCSSファイルをコピーする関数
-const copyAssets = async (file: string) => {
-    const relativePath = relative("./src/assets", file)
-    const outputPath = `./dist/www/assets/${relativePath}`
-    ensureDirectoryExistence(outputPath)
-    await fsPromises.copyFile(file, outputPath)
-    console.log(`Copied: ${file} to ${outputPath}`)
-}
+/**
+ * TypeScript ファイルを bun でビルドし、出力先へコピーする
+ */
+const compileAndCopyTS = async (): Promise<void> => {
+  const tsFiles = await getFilesRecursively("./src/assets/js");
+  const tasks = tsFiles.filter(file => extname(file) === ".ts").map(async (file) => {
+    const relPath = relative("./src/assets/js", file);
+    const outputPath = `./dist/www/assets/js/${relPath.replace(/\.ts$/, ".js")}`;
+    await ensureDirectoryExistence(outputPath);
+    await runCommand(`bun build ${file} --outdir ${dirname(outputPath)}`);
+    console.log(`Compiled and copied: ${file} to ${outputPath}`);
+  });
+  await Promise.all(tasks);
+};
 
+/**
+ * CSS 以外の assets ファイルをコピーする
+ */
+const copyAssetsAll = async (): Promise<void> => {
+  const assetFiles = await getFilesRecursively("./src/assets");
+  const tasks = assetFiles
+    .filter(file => extname(file) !== ".css")
+    .map(async (file) => {
+      const relPath = relative("./src/assets", file);
+      const outputPath = `./dist/www/assets/${relPath}`;
+      await ensureDirectoryExistence(outputPath);
+      await fsPromises.copyFile(file, outputPath);
+      console.log(`Copied: ${file} to ${outputPath}`);
+    });
+  await Promise.all(tasks);
+};
 
-// JSXファイルをHTMLに変換する関数
-const compileHTML = async (changedFile: string) => {
+/**
+ * 単一の asset ファイル（CSS 等）をコピーする
+ */
+const copyAssets = async (file: string): Promise<void> => {
+  const relPath = relative("./src/assets", file);
+  const outputPath = `./dist/www/assets/${relPath}`;
+  await ensureDirectoryExistence(outputPath);
+  await fsPromises.copyFile(file, outputPath);
+  console.log(`Copied: ${file} to ${outputPath}`);
+};
+
+/**
+ * 指定の .tsx ファイルを bun でビルドし、対応する .js ファイルから HTML を生成する
+ */
+const compileHTML = async (changedFile: string): Promise<void> => {
   try {
-      if (!existsSync("dist")) mkdirSync("dist")
-      if (!existsSync("dist/js")) mkdirSync("dist/js")
-      if (!existsSync("dist/www")) mkdirSync("dist/www")
+    // 必要なベースディレクトリを非同期で作成
+    await Promise.all([
+      fsPromises.mkdir("dist", { recursive: true }),
+      fsPromises.mkdir("dist/js", { recursive: true }),
+      fsPromises.mkdir("dist/www", { recursive: true })
+    ]);
 
-      const jsxFiles = [changedFile].filter(file => extname(file) === ".tsx")
+    // .tsx ファイル以外は処理しない
+    if (extname(changedFile) !== ".tsx") return;
 
-      for (const file of jsxFiles) {
-          const outputDir = `dist/js/${relative('./src/pages', dirname(file))}`
-          if (!existsSync(outputDir)) {
-              ensureDirectoryExistence(outputDir)
-              mkdirSync(outputDir, { recursive: true })
-          }
-          console.log(`Building: ${file}`)
-          execSync(`bun build ${file} --outdir ${outputDir} --target=bun`)
+    const outputDir = `dist/js/${relative("./src/pages", dirname(changedFile))}`;
+    await fsPromises.mkdir(outputDir, { recursive: true });
+    console.log(`Building: ${changedFile}`);
+    await runCommand(`bun build ${changedFile} --outdir ${outputDir} --target=bun`);
+
+    const jsFile = changedFile.replace(/\.tsx$/, ".js");
+    if (!jsFile.endsWith(".js")) return;
+
+    const relPath = relative("./src/pages", jsFile);
+    const nameWithoutExt = relPath.replace(/\.js$/, "");
+    const outputHtmlPath = jsFile.endsWith(".inc.js")
+      ? `./dist/www/${nameWithoutExt}`
+      : `./dist/www/${nameWithoutExt}.html`;
+
+    // 出力先ディレクトリの作成
+    await ensureDirectoryExistence(outputHtmlPath);
+    console.log(`Converting ${jsFile} to HTML`);
+    clearRequireCache(resolve(jsFile));
+
+    // ES モジュールとして読み込み、ページ生成関数を実行する
+    const pageModule = await import(resolve(jsFile));
+    const pageFunction = pageModule.default;
+    let htmlContent: string | undefined;
+    if (jsFile.includes("pages")) {
+      htmlContent = await pageFunction();
+      if (!jsFile.endsWith(".inc.js") && !jsFile.includes("include")) {
+        htmlContent = `<!DOCTYPE html>\n${htmlContent}`;
       }
-
-      const jsFiles = [changedFile.replace(/\.tsx$/, '.js')]
-
-      for (const file of jsFiles) {
-        if (!file.endsWith(".js")) continue
-
-        const relativePath = relative('./src/pages', file)
-        const nameWithoutExt = relativePath.replace(/\.js$/, '')
-        let outputHtmlPath: PathLike | fsPromises.FileHandle
-
-        if (file.endsWith(".inc.js")) {
-            outputHtmlPath = `./dist/www/${nameWithoutExt}`
-        } else {
-            outputHtmlPath = `./dist/www/${nameWithoutExt}.html`
-        }
-        if (file.includes("src/pages")) {
-            ensureDirectoryExistence(outputHtmlPath)
-        }
-        console.log(`Converting ${file} to HTML`)
-        clearRequireCache(resolve(file))
-
-        const pageFunction = await import(resolve(file)).then(p => p.default)
-        let htmlContent: string | undefined
-
-        // htmlContentの生成を修正
-        if (file.includes("pages")) {
-            htmlContent = await pageFunction()
-            if (!file.endsWith(".inc.js") && !file.includes("include")) {
-                // <!DOCTYPE html> を追加
-                htmlContent = `<!DOCTYPE html>\n${htmlContent}`
-            }
-        }
-
-        htmlContent && await fsPromises.writeFile(outputHtmlPath, htmlContent, 'utf8')
-        htmlContent && console.log(`Generated: ${outputHtmlPath}`)
     }
-
+    if (htmlContent) {
+      await fsPromises.writeFile(outputHtmlPath, htmlContent, "utf8");
+      console.log(`Generated: ${outputHtmlPath}`);
+    }
   } catch (error) {
-      console.error("Error during HTML compilation:", error)
+    console.error("Error during HTML compilation:", error);
   }
-}
+};
 
-// public配下のファイルをそのままdist/www/配下に階層構造を保ってコピーする関数
-const copyPublicFiles = async () => {
-  const publicFiles = await getFilesRecursively("./public")
-  for (const file of publicFiles) {
-      const relativePath = relative("./public", file)
-      const outputPath = `./dist/www/${relativePath}`
-      ensureDirectoryExistence(outputPath)
-      await fsPromises.copyFile(file, outputPath)
-      console.log(`Copied: ${file} to ${outputPath}`)
-  }
-}
+/**
+ * public 配下のファイルをそのまま dist/www/ 配下へコピーする
+ */
+const copyPublicFiles = async (): Promise<void> => {
+  const publicFiles = await getFilesRecursively("./public");
+  const tasks = publicFiles.map(async (file) => {
+    const relPath = relative("./public", file);
+    const outputPath = `./dist/www/${relPath}`;
+    await ensureDirectoryExistence(outputPath);
+    await fsPromises.copyFile(file, outputPath);
+    console.log(`Copied: ${file} to ${outputPath}`);
+  });
+  await Promise.all(tasks);
+};
 
-// 既存のcompileAll関数に追加
-const compileAll = async () => {
+/**
+ * 全体のコンパイル処理を実行する
+ * ・src 以下の .tsx ファイルを HTML 化
+ * ・assets のコピーおよび TypeScript のビルド
+ * ・public のファイルをコピー
+ */
+const compileAll = async (): Promise<void> => {
   try {
-    if (!existsSync("dist")) mkdirSync("dist")
-      if (!existsSync("dist/js")) mkdirSync("dist/js")
-      if (!existsSync("dist/www")) mkdirSync("dist/www")
+    // ベースディレクトリの作成
+    await Promise.all([
+      fsPromises.mkdir("dist", { recursive: true }),
+      fsPromises.mkdir("dist/js", { recursive: true }),
+      fsPromises.mkdir("dist/www", { recursive: true })
+    ]);
 
-      const pageFiles = await getFilesRecursively("./src")
-      const jsxFiles = pageFiles.filter(file => extname(file) === ".tsx")
+    const pageFiles = await getFilesRecursively("./src");
+    const jsxFiles = pageFiles.filter(file => extname(file) === ".tsx");
 
-      for (const file of jsxFiles) {
-          await compileHTML(file)
-      }
-      // CSSファイルをコピー
-      await copyAssetsAll()
+    // 各 .tsx ページを並列に HTML 化（処理数が多い場合は並列数を制限する方法も検討）
+    await Promise.all(jsxFiles.map(file => compileHTML(file)));
 
-      // TypeScriptファイルをコンパイルしてコピー
-      await compileAndCopyTS()
-
-      // public配下のファイルをコピー
-      await copyPublicFiles()
-
+    // CSS 以外の assets コピー、TypeScript のビルド、public コピーを並列実行
+    await Promise.all([copyAssetsAll(), compileAndCopyTS(), copyPublicFiles()]);
   } catch (error) {
-      console.error("Error during HTML compilation:", error)
+    console.error("Error during HTML compilation:", error);
   }
-}
+};
 
-export { compileHTML, compileAll, copyAssetsAll, copyAssets, compileAndCopyTS }
+export { compileHTML, compileAll, copyAssetsAll, copyAssets, compileAndCopyTS };

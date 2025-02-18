@@ -1,7 +1,11 @@
 import imageData from 'src/data/image_metadata.json';
 
 type P = {
-  src: string;
+  /**
+   * 使用できる画像は、必ず
+   * `src/data/image_metadata.json` に記載されているもののみとなります。
+   */
+  src: keyof typeof imageData;
   alt: string;
 };
 

@@ -1,3 +1,4 @@
+import BoxBorderWithHeading from 'src/components/BoxBorderWithHeading';
 import Break from 'src/components/Break';
 import Comment from 'src/components/Comment';
 import Image from 'src/components/Image';
@@ -38,15 +39,17 @@ export default async function Index() {
       <Comment ssi='/include/hoge.html' />
       <simple-greeting>aaa</simple-greeting>
       <section>
+        <BoxBorderWithHeading as='div'>！！hoge</BoxBorderWithHeading>
         <h2>Foot note</h2>
-        <p>
-          明日の
-          <Break />
+        <p className='hoge'>
+          明日の!!!!!
+          <br />
           ジョー
         </p>
         <p>
           some text<sup data-footnote='ref_2'>2</sup>another text
-          <sup data-footnote='ref_1'>1</sup>.... get back text<sup data-footnote='ref_2'>2</sup>
+          <sup data-footnote='ref_1'>1</sup>.... get back text
+          <sup data-footnote='ref_2'>2</sup>
         </p>
         <ol data-footnote='list'>
           <li>footnote description1 aaa aaa aaa</li>
@@ -73,6 +76,7 @@ export default async function Index() {
         I'm a Popover! <span className='wave'>👋</span>
       </div>
 
+      <Image src='/assets/image/gorilla/00' alt='hoge' />
       <Image src='/assets/image/rafael--kEI0ZZg97PQ-unsplash' alt='hoge' />
 
       <MyValues valueViaProps='Value via props'>{valueViaChildren}</MyValues>

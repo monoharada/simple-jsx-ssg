@@ -16,7 +16,7 @@
     }
 
     > li::marker {
-      content: "＊" counter();
+      content: "＊" counter(footnotes);
     }
 
     > li > .footnote-annotation::before {

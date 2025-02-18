@@ -5,12 +5,12 @@ const errorHandler = async ({ next }) => {
       return new Response(`${err.message}\n${err.stack}`, { status: 500 });
     }
   };
-  
+
   const guardByBasicAuth = async ({ request, next, env }) => {
     if (env.BASIC_AUTH !== 'true') {
       return await next();
     }
-  
+
     // Check header
     if (!request.headers.has('Authorization')) {
       return new Response(
@@ -36,16 +36,11 @@ const errorHandler = async ({ next }) => {
     const buffer = Uint8Array.from(atob(encoded), character => character.charCodeAt(0));
     const decoded = new TextDecoder().decode(buffer).normalize();
     const index = decoded.indexOf(':');
-    // eslint-disable-next-line no-control-regex
-    if (index === -1 || /[\0-\x1F\x7F]/.test(decoded)) {
-      return new Response(
-        'Invalid authorization value.',
-        {
-          status: 400,
-        },
-      );
+
+    if (index === -1 || /\p{Cc}/u.test(decoded)) {
+      return new Response("Invalid authorization value.", { status: 400 });
     }
-  
+
     const username = decoded.substring(0, index);
     const password = decoded.substring(index + 1);
     if (username !== env.BASIC_USERNAME || password !== env.BASIC_PASSWORD) {
@@ -58,5 +53,5 @@ const errorHandler = async ({ next }) => {
     }
     return await next();
   };
-  
+
   export const onRequest = [errorHandler, guardByBasicAuth];
