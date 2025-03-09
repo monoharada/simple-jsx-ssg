@@ -26,7 +26,8 @@
         "markuplint",
     ],
     "ignorePaths": [
-        "../src/data/image_metadata.json"
+        "../src/data/image_metadata.json",
+        "../src/pages/native-css-custome-property-idea.tsx"
     ]
     // flagWords - list of words to be always considered incorrect
     // This is useful for offensive words and common spelling errors.

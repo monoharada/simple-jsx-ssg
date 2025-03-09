@@ -3,6 +3,10 @@ declare global {
     interface IntrinsicElements {
       [key: string]: React.ReactElement | null;
     }
+
+    interface IntrinsicAttributes {
+      key?: string;
+    }
   }
 
   export type PropsWithChildren<

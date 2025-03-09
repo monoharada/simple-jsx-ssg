@@ -29,6 +29,9 @@
       "quoteProperties": "asNeeded"
     }
   },
+  "files": {
+    "ignore": ["**/src/assets/css/common/contents.css"]
+  },
   "css": {
     "formatter": {
       "enabled": true,
