@@ -27,7 +27,8 @@
     ],
     "ignorePaths": [
         "../src/data/image_metadata.json",
-        "../src/pages/native-css-custome-property-idea.tsx"
+        "../src/pages/native-css-custome-property-idea.tsx",
+        "../tools/dev/dev.sh"
     ]
     // flagWords - list of words to be always considered incorrect
     // This is useful for offensive words and common spelling errors.

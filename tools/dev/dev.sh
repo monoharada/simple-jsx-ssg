@@ -36,6 +36,7 @@ elif [[ "$OSTYPE" == "darwin"* ]]; then
                     if (URL of t) starts with "http://localhost:3000" then
                         set foundTab to true
                         set active tab index of w to i
+                        reload t
                         set index of w to 1
                         activate
                         exit repeat

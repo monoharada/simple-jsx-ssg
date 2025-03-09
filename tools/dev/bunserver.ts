@@ -23,30 +23,34 @@ wss.on('connection', (ws) => {
   });
 });
 
-// chokidar.watch の対象を 'dist/www' と 'src/components' 両方に拡張
-chokidar.watch(['dist/www', 'src/components']).on('all', (event, filePath) => {
+// chokidar.watch の対象を 'dist/www' 、'src/components' 、'ui-system' に拡張しつつ、
+// ui-system/node_modules は無視する設定を追加
+chokidar.watch(['dist/www', 'src', 'ui-system'], {
+  ignored: /ui-system\/node_modules/,
+  awaitWriteFinish: {
+    stabilityThreshold: 300, // .3秒ほど待ってから確定させる
+    pollInterval: 100,
+  },
+}).on('all', (event, filePath) => {
   console.log(event, filePath);
 
-  if (filePath.startsWith('src/components')) {
-    // src/components 内の変更の場合はすべてのクライアントにリロード通知を送信
+  // src/components または ui-system 内の変更の場合はすべてのクライアントにリロード通知を送信
+  if (filePath.startsWith('src/') || filePath.startsWith('ui-system')) {
     for (const client of wss.clients) {
       if (client.readyState === WebSocket.OPEN) {
         client.send('reload');
       }
     }
   } else {
-    // dist/www の場合は表示中のページと一致するかどうかでリロード通知する
+    // dist/www の場合は表示中のページが一致しているクライアントにのみリロード通知を送信
     for (const client of wss.clients) {
       if (client.readyState === WebSocket.OPEN) {
         const clientPath = clientPageMap.get(client);
         if (clientPath) {
-          // クライアントから送られるパスは先頭に "/" が付くため除去し、
-          // "/" の場合は "index.html" に変換
           let normalizedPath = clientPath.replace(/^\//, '');
           if (normalizedPath === '') {
             normalizedPath = 'index.html';
           }
-          // 例: filePath が "dist/www/index.html"、normalizedPath が "index.html" なら一致する
           if (filePath.endsWith(normalizedPath)) {
             client.send('reload');
           }
@@ -165,12 +169,15 @@ const server = Bun.serve({
       content = (content as string).replace(
         '</body>',
         `<script>
-          // 接続時に現在のパス（例: "/index.html" や "/about.html"）を送信
+          // WebSocketサーバー(ws://localhost:8080)に接続し、
+          // ページパスの情報を送信してリロード通知を待つ
           const ws = new WebSocket('ws://localhost:8080');
           ws.addEventListener('open', () => {
+            // 現在表示中のパスを送信 ("/index.html"など)
             ws.send(window.location.pathname);
           });
           ws.onmessage = (event) => {
+            // サーバーから 'reload' が送られてきたらページを再読み込み
             if (event.data === 'reload') {
               window.location.reload();
             }
