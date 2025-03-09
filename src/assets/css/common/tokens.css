@@ -1,4 +1,5 @@
 @import "../_import/spacing-scale.css";
 @import "../_import/typography-scale.css";
-@import "../../../../ui-system/src/tokens.css";
+
+/* @import "../../../../ui-system/src/tokens.css"; */
 @import "../_import/stroke.css";

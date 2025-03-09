@@ -76,7 +76,9 @@ export default async function Index() {
         </section>
 
         <section style='--m-t-min: var(--spacing-6);'>
-          <h2>Uniq section Ut sed quam non mauris placerat consequat vitae id risus</h2>
+          <h2>
+            <mark>Uniq section</mark> Ut sed quam non mauris placerat consequat vitae id risus
+          </h2>
           <p>
             Ut sed quam non mauris placerat consequat vitae id risus. Vestibulum tincidunt nulla ut
             tortor posuere, vitae malesuada tortor molestie. Sed nec interdum dolor. Vestibulum id
