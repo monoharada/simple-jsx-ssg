@@ -1,4 +1,4 @@
-@layer component {
+@layer landmark {
   body > header {
     display: flex;
     flex-wrap: wrap;

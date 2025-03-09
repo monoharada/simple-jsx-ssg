@@ -1,8 +1,39 @@
 @layer layout {
   /* example */
+
+  html,
+  body {
+    /*
+    height: 100%;
+    - this can cause bugs in js with:
+    - document.body.offsetHeight
+    - document.documentElement.clientHeight
+    - document.documentElement.offsetHeight
+  */
+
+    min-height: 100vh;
+
+    /*
+    Better but, even min-height:100vh causes wrong
+    document.documentElement.clientHeight 😥
+  */
+  }
+
+  body > header,
+  body > footer,
   main {
-    display: grid;
-    grid-template-columns: 1fr;
-    row-gap: 1rem;
+    --content-width: min(64ic, 100%);
+    --content-padding-inline: var(--spacing-px-4);
+    --content-padding-block: var(--spacing-4);
+
+    max-width: var(--content-width);
+    margin-inline: auto;
+    padding-block: var(--content-padding-block);
+    padding-inline: var(--content-padding-inline);
+  }
+
+  body > footer {
+    position: sticky;
+    top: 100vh;
   }
 }

@@ -1,6 +1,40 @@
 @layer contents {
   /* example */
-  section p + p {
-    margin-block-start: var(--system-space-default);
+  section:not([class]) {
+    --section-row-gap: 1lh;
+
+    display: grid;
+    container-type: inline-size;
+    content-visibility: auto;
+    grid-template-columns: 1fr;
+    line-height: var(--line-height-lg);
+    row-gap: var(--section-row-gap);
+
+
+    &[data-cols] {
+      --gap: var(--spacing-2);
+
+      @container (min-width: 768px) {
+        @property --cols {
+          inherits: false;
+          initial-value: 4;
+          syntax: '<integer>';
+        }
+
+        /* stylelint-disable-next-line */
+        --cols: attr(data-cols type(<integer>));
+        --gap: var(--spacing-4);
+
+        grid-template-columns: repeat(var(--cols), minmax(0, 1fr));
+
+        > :where(h2, h3) {
+          grid-column: 1 / -1;
+        }
+      }
+
+      gap: var(--gap);
+
+
+    }
   }
 }

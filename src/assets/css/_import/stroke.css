@@ -1,0 +1,20 @@
+@layer tokens {
+  :root {
+    --stroke-width-base: 1px;
+    --stroke-width-sm: 0.5px;
+    --stroke-width-md: 2px;
+    --stroke-width-lg: 3px;
+    --stroke-width-xl: 4px;
+
+    /* border-color */
+    --color-border: #ccc;
+
+    /* border-radius */
+    --border-radius-base: 4px;
+    --border-radius-sm: 2px;
+    --border-radius-md: 8px;
+    --border-radius-lg: 16px;
+    --border-radius-xl: 32px;
+    --border-radius-full: calc(infinity * 1px);
+  }
+}

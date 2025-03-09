@@ -1,1 +1,3 @@
 /* import が主 */
+@import "../_import/header.css";
+@import "../_import/footer.css";

@@ -1,15 +1,4 @@
 /* import が主 */
 @import "../_import/foot-note.css";
-@import "../_import/header.css";
-
-/* layer test */
-
-@layer components {
-  h1#title {
-    color: blue;
-
-    @media (width >= 768px) {
-      color: red;
-    }
-  }
-}
+@import "../_import/basic-section.css";
+@import "../_import/card.css";

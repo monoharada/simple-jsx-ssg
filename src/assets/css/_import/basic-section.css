@@ -1,0 +1,20 @@
+@layer components {
+  h1,
+  h2 {
+    line-height: var(--line-height-sm);
+  }
+
+  h1 {
+    --fs-min: var(--font-size-28);
+    --fs-max: var(--font-size-40);
+    --m-t-min: var(--spacing-5);
+    --m-t-max: var(--spacing-6);
+  }
+
+  h2 {
+    --fs-min: var(--font-size-24);
+    --fs-max: var(--font-size-32);
+    --m-t-min: var(--spacing-4);
+    --m-t-max: var(--spacing-5);
+  }
+}

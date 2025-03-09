@@ -1,5 +1,5 @@
 @layer base {
-  :root {
+  /* :root {
     background-color: var(--system-background-color, #fff);
     color: var(--system-text-color, #333);
 
@@ -16,5 +16,43 @@
 
   h1 {
     color: red;
+  } */
+
+  :where(*, *::after, *::before) {
+    /* フォントサイズ */
+    font-size: var(--fs-min, revert);
+
+    /* マージン - ロジカルプロパティ */
+    margin-block: var(--m-t-min, 0) var(--m-b-min, 0);
+    margin-inline: var(--m-l-min, 0) var(--m-r-min, 0);
+
+    /* パディング - ロジカルプロパティ */
+    padding-block: var(--p-t-min, 0) var(--p-b-min, 0);
+    padding-inline: var(--p-l-min, 0) var(--p-r-min, 0);
+
+    @media (width >= 768px) {
+      /* フォントサイズ */
+      font-size: var(--fs-max, var(--fs-min));
+      margin-block: var(--m-t-max, var(--m-t-min, 0)) var(--m-b-max, var(--m-b-min, 0));
+
+      /* マージン - ロジカルプロパティ */
+
+      /* margin-block: var(--m-y-max, var(--m-y-min, 0)); */
+
+      /* margin-inline: var(--m-x-max, var(--m-x-min, 0)); */
+      margin-inline: var(--m-x-max, var(--m-x-min, var(--m-l-max, var(--m-l-min, 0))))
+        var(--m-x-max, var(--m-x-min, var(--m-r-max, var(--m-r-min, 0))));
+      padding-block: var(--p-t-max, var(--p-t-min, 0)) var(--p-b-max, var(--p-b-min, 0));
+
+      /* パディング - ロジカルプロパティ */
+
+      /* padding-block: var(--p-y-max, var(--p-y-min, 0)); */
+
+      /* padding-inline: var(--p-x-max, var(--p-x-min, 0)); */
+      padding-inline: var(--p-l-max, var(--p-l-min, 0)) var(--p-r-max, var(--p-r-min, 0));
+    }
+
+    /* biome-ignore lint/correctness/noUnknownProperty: <explanation> */
+    text-box: trim-both cap alphabetic;
   }
 }

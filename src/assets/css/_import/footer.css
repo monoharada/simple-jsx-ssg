@@ -1,0 +1,9 @@
+@layer landmark {
+  body > footer {
+    text-align: center;
+
+    > small::before {
+      content: "©";
+    }
+  }
+}

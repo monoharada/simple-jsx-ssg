@@ -1,0 +1,80 @@
+/**
+ * スペーシングスケールトークン
+ *
+ * 基本単位: 4px (0.25rem)
+ *
+ * 数値スケール: --spacing-0 から --spacing-10
+ * セマンティックスケール: --spacing-xs から --spacing-3xl
+ * ネガティブスケール: --spacing-n1 から --spacing-n6
+ * 単位バリエーション: rem単位 (--spacing-{n}) と px単位 (--spacing-px-{n})
+ */
+
+@layer token {
+  :root,
+  :host {
+    /* 基本単位の定義 */
+    --spacing-base-unit: 4; /* 基本単位をpx値で定義 */
+    --spacing-unit-px: calc(var(--spacing-base-unit) * 1px); /* 基本単位のpx値 */
+    --spacing-unit-rem: calc(var(--spacing-base-unit) / 16 * 1rem); /* 基本単位のrem値 (1rem = 16px) */
+
+    /* 数値スケール (rem単位) */
+    --spacing-0: 0rem;
+    --spacing-1: var(--spacing-unit-rem);
+    --spacing-2: calc(var(--spacing-unit-rem) * 2);
+    --spacing-3: calc(var(--spacing-unit-rem) * 3);
+    --spacing-4: calc(var(--spacing-unit-rem) * 4);
+    --spacing-5: calc(var(--spacing-unit-rem) * 6);
+    --spacing-6: calc(var(--spacing-unit-rem) * 8);
+    --spacing-7: calc(var(--spacing-unit-rem) * 12);
+    --spacing-8: calc(var(--spacing-unit-rem) * 16);
+    --spacing-9: calc(var(--spacing-unit-rem) * 24);
+    --spacing-10: calc(var(--spacing-unit-rem) * 32);
+
+    /* 数値スケール (px単位) */
+    --spacing-px-0: 0px;
+    --spacing-px-1: var(--spacing-unit-px);
+    --spacing-px-2: calc(var(--spacing-unit-px) * 2);
+    --spacing-px-3: calc(var(--spacing-unit-px) * 3);
+    --spacing-px-4: calc(var(--spacing-unit-px) * 4);
+    --spacing-px-5: calc(var(--spacing-unit-px) * 6);
+    --spacing-px-6: calc(var(--spacing-unit-px) * 8);
+    --spacing-px-7: calc(var(--spacing-unit-px) * 12);
+    --spacing-px-8: calc(var(--spacing-unit-px) * 16);
+    --spacing-px-9: calc(var(--spacing-unit-px) * 24);
+    --spacing-px-10: calc(var(--spacing-unit-px) * 32);
+
+    /* セマンティックスケール (rem単位) */
+    --spacing-xs: var(--spacing-1);
+    --spacing-sm: var(--spacing-2);
+    --spacing-md: var(--spacing-4);
+    --spacing-lg: var(--spacing-6);
+    --spacing-xl: var(--spacing-8);
+    --spacing-2xl: var(--spacing-9);
+    --spacing-3xl: var(--spacing-10);
+
+    /* セマンティックスケール (px単位) */
+    --spacing-px-xs: var(--spacing-px-1);
+    --spacing-px-sm: var(--spacing-px-2);
+    --spacing-px-md: var(--spacing-px-4);
+    --spacing-px-lg: var(--spacing-px-6);
+    --spacing-px-xl: var(--spacing-px-8);
+    --spacing-px-2xl: var(--spacing-px-9);
+    --spacing-px-3xl: var(--spacing-px-10);
+
+    /* ネガティブスケール (rem単位) */
+    --spacing-n1: calc(var(--spacing-unit-rem) * -1);
+    --spacing-n2: calc(var(--spacing-unit-rem) * -2);
+    --spacing-n3: calc(var(--spacing-unit-rem) * -3);
+    --spacing-n4: calc(var(--spacing-unit-rem) * -4);
+    --spacing-n5: calc(var(--spacing-unit-rem) * -6);
+    --spacing-n6: calc(var(--spacing-unit-rem) * -8);
+
+    /* ネガティブスケール (px単位) */
+    --spacing-px-n1: calc(var(--spacing-unit-px) * -1);
+    --spacing-px-n2: calc(var(--spacing-unit-px) * -2);
+    --spacing-px-n3: calc(var(--spacing-unit-px) * -3);
+    --spacing-px-n4: calc(var(--spacing-unit-px) * -4);
+    --spacing-px-n5: calc(var(--spacing-unit-px) * -6);
+    --spacing-px-n6: calc(var(--spacing-unit-px) * -8);
+  }
+}
