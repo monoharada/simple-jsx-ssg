@@ -1,16 +1,15 @@
 import Header from 'src/components/Header';
 
-type p = PropsWithChildren<{ page: string }>;
+type p = PropsWithChildren<{ page?: string }>;
 
 const Layout = ({ children, page }: p) => {
   return (
     <body>
       <Header />
-      <p>{page}</p>
+      {page && <p>{page}</p>}
       <main>{children}</main>
       <footer>
-        footer
-        {page === 'hoge' && 'hoge'}
+        <small>footer</small>
       </footer>
     </body>
   );

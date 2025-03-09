@@ -6,7 +6,7 @@ import { getResultPath } from 'tools/utils/getResultPath';
 
 type p = PropsWithChildren<{
   customMetaData?: Partial<MetaData>;
-  page: string;
+  page?: string;
 }>;
 
 const Frame = ({ children, customMetaData = {}, page = '' }: p) => {
