@@ -23,7 +23,7 @@ pre-commit:
     stylelint:
       tags: css style
       glob: '*.{css,scss,less}'
-      run: bunx stylelint {staged_files} --config lint-tools/.stylelintrc.json --allow-empty-input
+      run: bunx stylelint {staged_files} --config lint-tools/.stylelintrc.json --allow-empty-input --fix
       stage_fixed: true
     markuplint:
       tags: markup test

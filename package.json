@@ -8,6 +8,9 @@
     "staging": "sh tools/build/staging.sh",
     "lint": "bun ./lint-tools/linting.ts"
   },
+  "workspaces": [
+    "./ui-system"
+  ],
   "devDependencies": {
     "@biomejs/biome": "^1.9.4",
     "@ls-lint/ls-lint": "^2.2.3",
@@ -30,8 +33,5 @@
   },
   "peerDependencies": {
     "typescript": "^5.4.5"
-  },
-  "dependencies": {
-    "preact": "^10.25.4"
   }
 }
